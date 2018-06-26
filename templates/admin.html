@@ -1,0 +1,31 @@
+{%extends "layout.html"%}
+{%block body%}
+{%for i in alltopics%}
+<!-- POST -->
+<div class="post">
+    <div class="wrap-ut pull-left">
+        <div class="userinfo pull-left">
+            <div class="avatar">
+                <img src="{{ url_for('static', filename='avatar.jpg')}}" alt="">
+            </div>
+        </div>
+        <div class="posttext pull-left">
+            <h2><a href="/topicpage/{{i.id}}">{{i.title}}</a></h2>
+            <p>{{i.message[0:150]}}...</p>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <form method="post" action="{{url_for('approve')}}">
+    <div class="postinfo pull-left"><br><br>
+    <input type="text" value="{{i.id}}" name="entry" style="display: none;"></input>
+    {% if i.approval == 0 %}
+        <button class="btn btn-danger" type="submit">Approve</button>
+    {% else %}
+        <button class="btn btn-success" disabled="disabled">Approved</button> 
+    {% endif %}                                  
+    </div>
+    </form>
+    <div class="clearfix"></div>
+</div><!-- POST -->
+{% endfor %}
+{%endblock%}

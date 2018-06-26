@@ -1,0 +1,204 @@
+{%extends "layout.html"%}
+{%block body%}
+<script>
+$(function() {
+    $('#upvote{{topic.id}}').click(function() {
+        var topic_id = {{topic.id}};
+        $.ajax({
+            url: '/like',
+            data: {'topic_id':topic_id},
+            dataType : "JSON",
+            type: 'POST',
+            success: function(response) {
+                $('#like{{topic.id}}').text(response['data']);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+    $('#downvote{{topic.id}}').click(function() {
+        var topic_id = {{topic.id}};
+        $.ajax({
+            url: '/dislike',
+            data: {'topic_id':topic_id},
+            type: 'POST',
+            dataType : "JSON",
+            success: function(response) {
+                $('#dislike{{topic.id}}').text(response['data']);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+});
+</script>
+<!-- POST -->
+<div class="post beforepagination">
+    <div class="topwrap">
+        <div class="userinfo pull-left">
+            <div class="avatar">
+                <img src="{{ url_for('static', filename='avatar.jpg')}}" alt="">
+            </div>
+        </div>
+        <div class="posttext pull-left">
+            <h2>{{topic.title}}</h2>
+            <p>{{topic.message}}</p>
+        </div>
+        <div class="clearfix"></div>
+    </div>                              
+    <div class="postinfobot">
+        <div class="likeblock pull-left">
+            <a id="upvote{{topic.id}}" class="up"><i class="fa fa-thumbs-o-up"></i><span id="like{{topic.id}}">{{topic.likes}}</span></a>
+            <a id="downvote{{topic.id}}" class="down"><i class="fa fa-thumbs-o-down"></i><span id="dislike{{topic.id}}">{{topic.dislikes}}</span></a>
+        </div>
+        <div class="prev pull-left" style="width:50px;">
+        {% if session.logged_in and (topic.email == session.logged_email or session.logged_email == "admin") %}                                        
+            <a data-toggle="modal" data-target="#topic{{topic.id}}"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;
+            <a href="/deletetopic/{{topic.id}}"><i class="fa fa-trash"></i></a>
+        {% endif %}
+        </div>
+        <div class="posted pull-left" style="width: 450px;">
+        <i class="fa fa-clock-o"></i> Posted on : {{topic.time_stamp}} &nbsp;&nbsp;&nbsp;Posted by : {{topic.email}}     
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div><br><!-- POST -->
+<!-- POST -->
+<div class="post">
+    <form action="{{url_for('postreply')}}" class="form" method="post">
+        <div class="topwrap">
+            <div class="userinfo pull-left">
+                <div class="avatar">
+                    <img src="{{ url_for('static', filename='avatar.jpg')}}" alt="">
+                </div>
+            </div>
+            <div class="posttext pull-left">
+                <div class="textwraper">
+                   <textarea name="reply" id="reply" placeholder="Post a Reply" data-gramm="true" style="z-index: auto; position: relative; line-height: 25px; font-size: 14px; transition: none; background: transparent !important;"></textarea>
+                   <input type="text" value="{{topic.id}}" name="quesid" style="display: none;"></input>
+                </div> 
+            </div>
+            <div class="clearfix"></div>
+        </div>                              
+        <div class="postinfobot">
+            <div class="pull-right postreply">
+                <div class="pull-left smile"><a href="#"><i class="fa fa-smile-o"></i></a></div>
+                <div class="pull-left"><button type="submit" class="btn btn-primary">Post Reply</button></div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </form>
+</div><!-- POST -->
+{% for i in allreplies %}
+<script>
+$(function() {
+    $('#upvote{{i.id}}').click(function() {
+        console.log("like")
+        var i_id = {{i.id}};
+        $.ajax({
+            url: '/rlike',
+            data: {'i_id':i_id},
+            dataType : "JSON",
+            type: 'POST',
+            success: function(response) {
+                $('#like{{i.id}}').text(response['data']);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+    $('#downvote{{i.id}}').click(function() {
+        var i_id = {{i.id}};
+        $.ajax({
+            url: '/rdislike',
+            data: {'i_id':i_id},
+            type: 'POST',
+            dataType : "JSON",
+            success: function(response) {
+                $('#dislike{{i.id}}').text(response['data']);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+});
+</script>
+<!-- POST -->
+<div class="post">
+    <div class="topwrap">
+        <div class="userinfo pull-left">
+            <div class="avatar">
+                <img src="{{ url_for('static', filename='avatar.jpg')}}" alt="">
+            </div>
+        </div>
+        <div class="posttext pull-left">
+            <p>{{i.message}}</p>
+        </div>
+        <div class="clearfix"></div>
+    </div>                              
+    <div class="postinfobot">
+        <div class="likeblock pull-left">
+            <a id="upvote{{i.id}}" class="up"><i class="fa fa-thumbs-o-up"></i><span id="like{{i.id}}">{{i.likes}}</span></a>
+            <a id="downvote{{i.id}}" class="down"><i class="fa fa-thumbs-o-down"></i><span id="dislike{{i.id}}">{{i.dislikes}}</span></a>
+        </div>
+        <div class="prev pull-left" style="width:50px;">                                        
+            {% if session.logged_in and (i.email == session.logged_email or session.logged_email == "admin")  %}                                        
+            <a data-toggle="modal" data-target="#reply{{i.id}}"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;
+            <a href="/deletereply/{{i.id}}"><i class="fa fa-trash"></i></a>
+            {% endif %}
+        </div>
+          <div class="posted pull-left" style="width: 450px;">
+        <i class="fa fa-clock-o"></i> Posted on : {{i.time_stamp}} &nbsp;&nbsp;&nbsp;Posted by : {{i.email}}     
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div><!-- POST -->
+<!-- Modal -->
+<div id="reply{{i.id}}" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <form method="post" action="{{url_for('updatereply')}}">
+      <div class="modal-body">
+        <input type="text" value="{{i.id}}" name="replyid" style="display: none;"></input>
+        <input type="text" value="{{topic.id}}" name="quesid" style="display: none;"></input>
+        <textarea name="message" id="desc" class="form-control">{{i.message}}</textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-default">Save Changes</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div id="topic{{topic.id}}" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <form method="post" action="{{url_for('updatetopic')}}">
+      <div class="modal-body">
+        <input type="text" value="{{topic.id}}" name="quesid" style="display: none;"></input>
+        <input type="text" name="title" class="form-control" value="{{topic.title}}"><br>
+        <textarea name="message" id="desc" class="form-control">{{topic.message}}</textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-default">Save Changes</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{%endblock%}

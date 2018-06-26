@@ -1,0 +1,76 @@
+{%extends "layout.html"%}
+{%block body%}
+<!-- POST -->
+<div class="post">
+    <form action="{{url_for('uploadtopic')}}" class="form newtopic" method="post">
+        <div class="topwrap">
+            <div class="userinfo pull-left">
+                <div class="avatar">
+                    <img src="{{ url_for('static', filename='avatar.jpg')}}" alt="">
+                    <div class="status red">&nbsp;</div>
+                </div>
+            </div>
+            <div class="posttext pull-left">
+                <div>
+                    <input type="text" placeholder="Enter Topic Title" name="title" class="form-control" required="required">
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12">
+                        <select name="category" id="category" class="form-control" required="required">
+                            <option disabled="" selected="">Select Category</option>
+                            <option>Language Learning</option>
+                            <option>Health & Fitness for Busy People</option>
+                            <option>Writing Style& Communication Skills</option>
+                            <option>Social Dynamics & Self Defense </option>
+                            <option>Using technology in small business</option>
+                            <option>Bullying or Cyber bullying</option>
+                            <option>Careers vs job: following your passion</option>
+                            <option>Starting and running your own social network</option>
+                            <option>Point and Shoot Photography</option>
+                            <option>Blog & Website Design</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <textarea name="message" id="desc" placeholder="Description" class="form-control"  required="required"></textarea>
+                </div>
+                <center><input type="submit" class="btn btn-success" value="Post"></input></center>
+            </div>
+            <div class="clearfix"></div>
+        </div>                              
+    </form>
+</div><!-- POST -->
+<div class="row similarposts">
+    <div class="col-lg-10"><i class="fa fa-info-circle"></i> <p>Similar Posts according to your <a href="#">Topic Title</a>.</p></div>
+    <div class="col-lg-2 loading"><i class="fa fa-spinner"></i></div>
+</div>
+ {%for i in alltopics%}
+<!-- POST -->
+<div class="post">
+    <div class="wrap-ut pull-left">
+        <div class="userinfo pull-left">
+            <div class="avatar">
+                <img src="{{ url_for('static', filename='avatar.jpg')}}" alt="">
+            </div>
+        </div>
+        <div class="posttext pull-left">
+            <h2><a href="/topicpage/{{i.id}}">{{i.title}}</a></h2>
+            <p>{{i.message[0:150]}}...</p>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="postinfo pull-left">
+        <div class="comments">
+            <div class="commentbg">
+                {{i.replies}}
+                <div class="mark"></div>
+            </div>
+
+        </div>
+        <div class="views"><i class="fa fa-eye"></i>  {{i.views}}</div>
+        <div class="time"><i class="fa fa-clock-o"></i>  {{i.time_stamp[0:10]}}</div>                                    
+    </div>
+    <div class="clearfix"></div>
+</div><!-- POST -->
+{% endfor %}
+{%endblock%}

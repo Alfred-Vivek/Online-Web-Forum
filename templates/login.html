@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="{{ url_for('static', filename='loginstyle.css')}}" rel='stylesheet' type='text/css' media="all" /><!--stylesheet-->
+</head>
+<body style="background:url({{ url_for('static', filename='bg.jpg')}});">
+<h1></h1>
+<div class="form-w3ls">
+    <ul class="tab-group cl-effect-4">
+        <li class="tab active"><a href="#signin-agile">Sign In</a></li>
+		<li class="tab"><a href="#signup-agile">Sign Up</a></li>        
+    </ul>
+    <div class="tab-content">
+        <div id="signin-agile">   
+			<form action="{{url_for('login')}}" method="POST">
+				{% if error!="" %}
+				<center><p class="header" style="color: red;">{{error}}</p></center><br>
+				{% endif %}				
+				<p class="header">Email Id:</p>
+				<input type="text" name="email" placeholder="Email Id" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email Id';}" required="required">
+				<p class="header">Password</p>
+				<input type="password" name="password" placeholder="Password" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Password';}" required="required">				
+				<input type="checkbox" id="brand" value="">
+				<label for="brand"><span></span> Remember me?</label>				
+				<input type="submit" class="sign-in" value="Sign In">
+			</form>
+		</div>
+		<div id="signup-agile">   
+			<form action="{{url_for('signup')}}" method="POST">				
+				<p class="header">User Name</p>
+				<input type="text" name="username" placeholder="Your Full Name" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Your Full Name';}" required="required">				
+				<p class="header">Email Address</p>
+				<input type="email" name="email" placeholder="Email" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email';}" required="required">
+				
+				<p class="header">Password</p>
+				<input type="password" name="password" placeholder="Password" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Password';}" required="required">				
+				<input type="submit" class="register" value="Sign up">
+			</form>
+		</div> 
+    </div><!-- tab-content -->
+</div> <!-- /form -->	  
+<!-- js files -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='login.js')}}"></script>
+<!-- /js files -->
+</body>
+</html>
